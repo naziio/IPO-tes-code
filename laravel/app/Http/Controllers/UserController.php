@@ -28,9 +28,7 @@ class UserController extends Controller
             'token' => Str::random(10),
         ]);
         if($user){
-            $admin = User::where('role', Role::ADMIN)->first();
             Mail::to($user->email)->send(new UserTokenActivated($user));
-            Mail::to($admin->email)->send(new AdminNewUserCreated($user));
         }
     return 'user created';
 
@@ -41,6 +39,11 @@ class UserController extends Controller
         $user = User::where('token', $token)->first();
         $user->email_verified_at = Carbon::now();
         $user->save();
-        return 'User confirm';
+        /**
+         * Also could be a foreach for send the email to every admin in the system
+         */
+        $admin = User::where('role', Role::ADMIN)->first();
+        Mail::to($admin->email)->send(new AdminNewUserCreated($user));
+        return 'User confirmed';
     }
 }

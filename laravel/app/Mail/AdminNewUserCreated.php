@@ -32,7 +32,7 @@ class AdminNewUserCreated extends Mailable
     public function build()
     {
         return $this->view('emails.adminNewUserCreated')
-        ->subject('New user created')
+        ->subject('New user created and activated')
         ->with(['user' => $this->user]);
     }
 }
