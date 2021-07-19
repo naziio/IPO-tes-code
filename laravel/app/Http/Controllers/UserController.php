@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateUserFormRequest;
 use Carbon\Carbon;
 use App\Models\Role;
 use App\Models\User;
@@ -19,8 +20,9 @@ class UserController extends Controller
         return view('users.index');
     }
 
-    public function store(Request $request)
+    public function store(CreateUserFormRequest $request)
     {
+        $request->validated();
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -43,7 +45,9 @@ class UserController extends Controller
          * Also could be a foreach for send the email to every admin in the system
          */
         $admin = User::where('role', Role::ADMIN)->first();
-        Mail::to($admin->email)->send(new AdminNewUserCreated($user));
+        if($admin){
+            Mail::to($admin->email)->send(new AdminNewUserCreated($user));
+        }
         return 'User confirmed';
     }
 }
