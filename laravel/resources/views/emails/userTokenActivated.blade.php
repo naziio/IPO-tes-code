@@ -1,0 +1,1 @@
+<p>Please {{$user->name}} confirm that u are not a robot clickling this link <a href="{{ $url }}">Click me!</a></p>
